@@ -1,7 +1,7 @@
 <?php
 namespace TheTurk\EditNotifications\Listeners;
 
-use Flarum\Post\Event\Revised as PostRevised;
+use Flarum\Post\Event\Saving as PostSaving;
 use TheTurk\EditNotifications\Jobs\SendNotificationWhenPostIsEdited;
 use Illuminate\Events\Dispatcher;
 use Flarum\Settings\SettingsRepositoryInterface;
@@ -30,24 +30,27 @@ class SubscribeToEvents
      */
     public function subscribe(Dispatcher $events)
     {
-        $events->listen(PostRevised::class, [$this, 'whenPostRevised']);
+        $events->listen(PostSaving::class, [$this, 'whenSavingPost']);
         $events->listen(Serializing::class, [$this, 'prepareApiAttributes']);
     }
 
     /**
-     * @param PostRevised $event
+     * @param PostSaving $event
      */
-    public function whenPostRevised(PostRevised $event)
+    public function whenSavingPost(PostSaving $event)
     {
         $actor = $event->actor;
-        $post = $event->post;
 
-        app('flarum.queue.connection')->push(
-            new SendNotificationWhenPostIsEdited(
-              $post,
-              $actor
-            )
-        );
+		if ($event->post->exists) {
+			$event->post->afterSave(function ($post) use ($actor) {
+				app('flarum.queue.connection')->push(
+					new SendNotificationWhenPostIsEdited(
+					  $post,
+					  $actor
+					)
+				);
+			});
+		}
     }
 
     /**
