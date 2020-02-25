@@ -1,0 +1,39 @@
+{
+  "name": "the-turk/flarum-edit-notifications",
+  "description": "Send notifications about edits.",
+  "keywords": [
+    "flarum",
+    "edit",
+    "notification",
+    "tracker"
+  ],
+  "type": "flarum-extension",
+  "license": "MIT",
+  "authors": [{
+    "name": "Hasan Özbey",
+    "email": "hasanoozbey@gmail.com",
+    "homepage": "https://github.com/the-turk"
+  }],
+  "support": {
+    "issues": "https://github.com/the-turk/flarum-edit-notifications/issues",
+    "source": "https://github.com/the-turk/flarum-edit-notifications"
+  },
+  "require": {
+    "flarum/core": ">=0.1.0-beta.10 <0.1.0-beta.12"
+  },
+  "autoload": {
+    "psr-4": {
+      "TheTurk\\EditNotifications\\": "src/"
+    }
+  },
+  "extra": {
+    "flarum-extension": {
+      "title": "Edit Notifications",
+      "icon": {
+        "name": "fas fa-pencil-alt",
+        "backgroundColor": "#b72a2a",
+        "color": "#fff"
+      }
+    }
+  }
+}

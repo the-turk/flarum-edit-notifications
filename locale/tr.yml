@@ -1,0 +1,13 @@
+the-turk-edit-notifications:
+    forum:
+      notifications:
+        interacted_post_edited_text:          "{username} kendi mesajını düzenledi"
+        post_edited_text:                     "{username} senin mesajını düzenledi"
+      settings:
+        notify_interacted_post_edited_label:  Birisi etkileşime girdiğim mesajı düzenlediğinde
+        notify_post_edited_label:             Birisi benim mesajlarımdan birini düzenlediğinde
+
+    admin:
+      settings:
+        title:                                Düzenleme Bildirimleri Ayarları
+        enableInteracts:                      Etkileşime girilen mesajlar için düzenleme bildirimlerini aktifleştir
