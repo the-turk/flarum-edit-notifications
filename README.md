@@ -30,7 +30,7 @@ php flarum cache:clear
 
 ## Usage
 
-Enable the extension. Disable notifications for interacted posts from the settings page if you wish.
+Enable the extension. Disable notifications for interacted posts from the extension's settings modal if you wish.
 
 **Reminder:** Users can disable these notifications individually in their settings page if they wish.
 
