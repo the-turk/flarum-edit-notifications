@@ -36,7 +36,7 @@ Enable the extension. Disable notifications for interacted posts from the settin
 
 ## Links
 
-- [Flarum Discuss post](https://discuss.flarum.org/)
+- [Flarum Discuss post](https://discuss.flarum.org/d/22896-edit-notifications)
 - [Source code on GitHub](https://github.com/the-turk/flarum-edit-notifications)
 - [Changelog](https://github.com/the-turk/flarum-edit-notifications/blob/master/CHANGELOG.md)
 - [Report an issue](https://github.com/the-turk/flarum-edit-notifications/issues)
