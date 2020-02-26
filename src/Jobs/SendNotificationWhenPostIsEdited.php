@@ -42,7 +42,7 @@ class SendNotificationWhenPostIsEdited implements ShouldQueue
 
     public function handle(NotificationSyncer $notifications)
     {
-        if ($this->post->user->id != $this->actor->id) {
+        if (null !== $this->post->user && $this->post->user->id != $this->actor->id) {
             $blueprint = new PostEditedBlueprint($this->post, $this->actor);
             $this->removePreviousNotifications($blueprint);
             $notifications->sync($blueprint, [$this->post->user]);
@@ -69,8 +69,8 @@ class SendNotificationWhenPostIsEdited implements ShouldQueue
 
                     if ($likes->exists()) {
                         foreach ($likes->get() as $l) {
-                          if ($l->id !== $this->actor->id
-                                  && $l->id !== $this->post->user->id) {
+                          if (null !== $l && $l->id !== $this->actor->id) {
+							  if (null !== $this->post->user && $l->id === $this->post->user->id) continue;
                               $userIds[] = $l->id;
                           }
                         }
@@ -82,8 +82,8 @@ class SendNotificationWhenPostIsEdited implements ShouldQueue
 
                     if ($postMentions->exists()) {
                         foreach ($postMentions->get() as $m) {
-                          if ($m->user->id !== $this->actor->id
-                                  && $m->user->id !== $this->post->user->id) {
+                          if (null !== $m->user && $m->user->id !== $this->actor->id) {
+							  if (null !== $this->post->user && $m->user->id === $this->post->user->id) continue;
                               $userIds[] = $m->user->id;
                           }
                         }
@@ -95,8 +95,8 @@ class SendNotificationWhenPostIsEdited implements ShouldQueue
 
                     if ($postReactions->exists()) {
                         foreach ($postReactions->get() as $r) {
-                          if ($r->pivot->user_id !== $this->actor->id
-                                  && $r->pivot->user_id !== $this->post->user->id) {
+                          if (is_int($r->pivot->user_id) && $r->pivot->user_id !== $this->actor->id) {
+							  if (null !== $this->post->user && $r->pivot->user_id === $this->post->user->id) continue;
                               $userIds[] = $r->pivot->user_id;
                           }
                         }
@@ -109,8 +109,8 @@ class SendNotificationWhenPostIsEdited implements ShouldQueue
 
                     if ($postUpVotes->exists()) {
                         foreach ($postUpVotes->get() as $uv) {
-                          if ($uv->id !== $this->actor->id
-                                  && $uv->id !== $this->post->user->id) {
+                          if (null !== $uv && $uv->id !== $this->actor->id) {
+							  if (null !== $this->post->user && $uv->id === $this->post->user->id) continue;
                               $userIds[] = $uv->id;
                           }
                         }
@@ -118,8 +118,8 @@ class SendNotificationWhenPostIsEdited implements ShouldQueue
 
                     if ($postDownVotes->exists()) {
                         foreach ($postDownVotes->get() as $dv) {
-                          if ($dv->id !== $this->actor->id
-                                  && $dv->id !== $this->post->user->id) {
+                          if (null !== $dv && $dv->id !== $this->actor->id) {
+							  if (null !== $this->post->user && $dv->id === $this->post->user->id) continue;
                               $userIds[] = $dv->id;
                           }
                         }
@@ -127,6 +127,7 @@ class SendNotificationWhenPostIsEdited implements ShouldQueue
                 }
 
                 $userIds = array_unique($userIds);
+				$userIds = array_filter($userIds);
                 $notifications->sync(
                   $blueprint,
                   User::whereIn('id', $userIds)->get()->all()
