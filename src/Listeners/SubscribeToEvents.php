@@ -5,6 +5,7 @@ use Flarum\Post\Event\Revised as PostRevised;
 use TheTurk\EditNotifications\Jobs\SendNotificationWhenPostIsEdited;
 use Illuminate\Events\Dispatcher;
 use Flarum\Settings\SettingsRepositoryInterface;
+use Flarum\Extension\ExtensionManager;
 use Flarum\Api\Event\Serializing;
 use Flarum\Api\Serializer\ForumSerializer;
 
@@ -16,13 +17,21 @@ class SubscribeToEvents
     protected $settings;
 
     /**
-     * Gets the settings variable. Called on Object creation.
-     *
-     * @param SettingsRepositoryInterface $settings
+     * @var ExtensionManager
      */
-    public function __construct(SettingsRepositoryInterface $settings)
+    private $extensions;
+
+    /**
+     * @param SettingsRepositoryInterface $settings
+     * @param ExtensionManager $extensions
+     */
+    public function __construct(
+      SettingsRepositoryInterface $settings,
+      ExtensionManager $extensions
+    )
     {
         $this->settings = $settings;
+        $this->extensions = $extensions;
     }
 
     /**
@@ -31,23 +40,26 @@ class SubscribeToEvents
     public function subscribe(Dispatcher $events)
     {
         $events->listen(PostRevised::class, [$this, 'whenPostRevised']);
+        if ($this->extensions->isEnabled('the-turk-flarum-diff')) {
+            $events->listen(
+                \TheTurk\Diff\Events\PostWasRollbacked::class,
+                [$this, 'whenPostRevised']
+            );
+        }
         $events->listen(Serializing::class, [$this, 'prepareApiAttributes']);
     }
 
-    /**
-     * @param PostRevised $event
-     */
-    public function whenPostRevised(PostRevised $event)
+    public function whenPostRevised($event)
     {
         $actor = $event->actor;
-		$post = $event->post;
+	      $post = $event->post;
 
-		app('flarum.queue.connection')->push(
-			new SendNotificationWhenPostIsEdited(
-			  $post,
-			  $actor
-			)
-		);
+    		app('flarum.queue.connection')->push(
+      			new SendNotificationWhenPostIsEdited(
+      			  $post,
+      			  $actor
+      			)
+    		);
     }
 
     /**
