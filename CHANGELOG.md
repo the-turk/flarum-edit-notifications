@@ -14,6 +14,6 @@
 
 This will also fix wrong notifications occuring when one reacts to a post | saves post without changes.
 
-#### 0.1.1
+### 0.1.1
 
 - **Fix** queue notifications `afterSave()` since `Revised` event raises before `Saving`
