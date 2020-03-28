@@ -11,8 +11,8 @@
  * @author     Hasan Özbey <hasanoozbey@gmail.com>
  * @copyright  2020
  * @license    The MIT License
- * @version    Release: 0.1.0
- * @link       https://github.com/the-turk/flarum-edit-histories
+ * @version    Release: 0.1.4
+ * @link       https://github.com/the-turk/flarum-edit-notifications
  */
 
 namespace TheTurk\EditNotifications;
