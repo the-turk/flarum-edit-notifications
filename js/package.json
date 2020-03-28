@@ -2,11 +2,11 @@
   "name": "@the-turk/flarum-edit-notifications",
   "description": "Send notifications about edits.",
   "license": "MIT",
-  "version": "0.1.0",
+  "version": "0.1.4",
   "dependencies": {
     "flarum-webpack-config": "0.1.0-beta.10",
-    "webpack": "^4.41.5",
-    "webpack-cli": "^3.3.10"
+    "webpack": "^4.42.1",
+    "webpack-cli": "^3.3.11"
   },
   "repository": {
     "type": "git",
