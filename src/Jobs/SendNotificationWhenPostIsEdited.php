@@ -32,13 +32,13 @@ class SendNotificationWhenPostIsEdited implements ShouldQueue
      * @param Post $post
      * @param User $actor
      */
-     public function __construct(
+    public function __construct(
          Post $post,
          User $actor
      ) {
-         $this->post = $post;
-         $this->actor = $actor;
-     }
+        $this->post = $post;
+        $this->actor = $actor;
+    }
 
     public function handle(NotificationSyncer $notifications)
     {
@@ -69,10 +69,12 @@ class SendNotificationWhenPostIsEdited implements ShouldQueue
 
                     if ($likes->exists()) {
                         foreach ($likes->get() as $l) {
-                          if (null !== $l && $l->id !== $this->actor->id) {
-							  if (null !== $this->post->user && $l->id === $this->post->user->id) continue;
-                              $userIds[] = $l->id;
-                          }
+                            if (null !== $l && $l->id !== $this->actor->id) {
+                                if (null !== $this->post->user && $l->id === $this->post->user->id) {
+                                    continue;
+                                }
+                                $userIds[] = $l->id;
+                            }
                         }
                     }
                 }
@@ -82,10 +84,12 @@ class SendNotificationWhenPostIsEdited implements ShouldQueue
 
                     if ($postMentions->exists()) {
                         foreach ($postMentions->get() as $m) {
-                          if (null !== $m->user && $m->user->id !== $this->actor->id) {
-							  if (null !== $this->post->user && $m->user->id === $this->post->user->id) continue;
-                              $userIds[] = $m->user->id;
-                          }
+                            if (null !== $m->user && $m->user->id !== $this->actor->id) {
+                                if (null !== $this->post->user && $m->user->id === $this->post->user->id) {
+                                    continue;
+                                }
+                                $userIds[] = $m->user->id;
+                            }
                         }
                     }
                 }
@@ -95,10 +99,12 @@ class SendNotificationWhenPostIsEdited implements ShouldQueue
 
                     if ($postReactions->exists()) {
                         foreach ($postReactions->get() as $r) {
-                          if (is_int($r->pivot->user_id) && $r->pivot->user_id !== $this->actor->id) {
-							  if (null !== $this->post->user && $r->pivot->user_id === $this->post->user->id) continue;
-                              $userIds[] = $r->pivot->user_id;
-                          }
+                            if (is_int($r->pivot->user_id) && $r->pivot->user_id !== $this->actor->id) {
+                                if (null !== $this->post->user && $r->pivot->user_id === $this->post->user->id) {
+                                    continue;
+                                }
+                                $userIds[] = $r->pivot->user_id;
+                            }
                         }
                     }
                 }
@@ -109,28 +115,32 @@ class SendNotificationWhenPostIsEdited implements ShouldQueue
 
                     if ($postUpVotes->exists()) {
                         foreach ($postUpVotes->get() as $uv) {
-                          if (null !== $uv && $uv->id !== $this->actor->id) {
-							  if (null !== $this->post->user && $uv->id === $this->post->user->id) continue;
-                              $userIds[] = $uv->id;
-                          }
+                            if (null !== $uv && $uv->id !== $this->actor->id) {
+                                if (null !== $this->post->user && $uv->id === $this->post->user->id) {
+                                    continue;
+                                }
+                                $userIds[] = $uv->id;
+                            }
                         }
                     }
 
                     if ($postDownVotes->exists()) {
                         foreach ($postDownVotes->get() as $dv) {
-                          if (null !== $dv && $dv->id !== $this->actor->id) {
-							  if (null !== $this->post->user && $dv->id === $this->post->user->id) continue;
-                              $userIds[] = $dv->id;
-                          }
+                            if (null !== $dv && $dv->id !== $this->actor->id) {
+                                if (null !== $this->post->user && $dv->id === $this->post->user->id) {
+                                    continue;
+                                }
+                                $userIds[] = $dv->id;
+                            }
                         }
                     }
                 }
 
                 $userIds = array_unique($userIds);
-				$userIds = array_filter($userIds);
+                $userIds = array_filter($userIds);
                 $notifications->sync(
-                  $blueprint,
-                  User::whereIn('id', $userIds)->get()->all()
+                    $blueprint,
+                    User::whereIn('id', $userIds)->get()->all()
                 );
             }
         }
